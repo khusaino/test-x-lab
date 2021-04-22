@@ -1,24 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import {BrowserRouter} from 'react-router-dom'
+import { Header } from "./components/Header";
+import { AuthContext } from './context/AuthContext';
+import { useAuth } from './hooks/authHook';
+import { useRoutes } from './routes';
+
 
 function App() {
+  const {login, logout, token} = useAuth()
+  const isAuthenticated = !!token
+  const route = useRoutes(isAuthenticated)
+
+ 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <AuthContext.Provider value={{login, logout, isAuthenticated, token}}>
+    <div className="wrapper">
+      <BrowserRouter>
+      <Header/>
+        {route}
+      </BrowserRouter> 
     </div>
+    </AuthContext.Provider>
   );
 }
 
